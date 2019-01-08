@@ -1,0 +1,134 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>微信JS-SDK Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body ontouchstart="">
+<div class="wxapi_container">
+   
+    <div class="lbox_close wxapi_form">
+      <h3 id="menu-basic">基础接口</h3>
+
+      <h3 id="menu-voice">音频接口</h3>
+      <span class="desc">开始录音接口</span>
+      <button class="btn btn_primary" id="startRecord">startRecord</button>
+      <span class="desc">停止录音接口</span>
+      <button class="btn btn_primary" id="stopRecord">stopRecord</button>
+      <span class="desc">播放语音接口</span>
+      <button class="btn btn_primary" id="playVoice">playVoice</button>
+
+    </div>
+  </div>
+</body>
+<script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script type="text/javascript" src="jquery-3.2.1.js"></script>
+<script>
+
+	$(function(){
+    var url = encodeURIComponent(location.href.split('#')[0]);
+    $.ajax({
+			type:"post",
+      data:{url:url},
+			// url:"https://szbapf.com/wxapi/weixin.php",
+      url:"signature.php",
+			// data:{appid:'wx5ead899dc1f6ea25'},
+			async:false,
+      dataType:'json',
+			success:function(data){
+        wx.config({
+          debug: false,
+          appId: data.appId,
+          timestamp: data.timestamp,
+          nonceStr: data.nonceStr,
+          signature: data.signature,
+          jsApiList: [
+            'startRecord',
+            'stopRecord',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice',
+            'uploadVoice',
+          ]
+        });
+			}
+		});
+    // ajax结束
+	});
+  // function结束
+
+  // 3 智能接口
+  var voice = {
+    localId: '',
+    serverId: ''
+  };
+
+  // 4 音频接口
+  // 4.2 开始录音
+  document.querySelector('#startRecord').onclick = function () {
+    wx.startRecord({
+      cancel: function () {
+        alert('用户拒绝授权录音');
+      }
+    });
+  };
+
+  // 4.3 停止录音
+  document.querySelector('#stopRecord').onclick = function () {
+    wx.stopRecord({
+      success: function (res) {
+        voice.localId = res.localId;
+
+        wx.uploadVoice({
+          localId: voice.localId,
+          success: function (res) {
+            
+            voice.serverId = res.serverId;
+            $.ajax({
+                type:"post",
+                url:"https://www.szbapf.com/wxjs/upload.php?serverId="+res.serverId,
+                // 接受数组对象
+                dataType:'json',
+                async:true,
+                success:function(msg){
+                    alert(JSON.stringify(msg));
+                }
+            })
+          }
+        });
+
+      },
+      fail: function (res) {
+        alert(JSON.stringify(res));
+      }
+    });
+  };
+
+  // 4.4 监听录音自动停止
+  wx.onVoiceRecordEnd({
+    complete: function (res) {
+      voice.localId = res.localId;
+      alert('录音时间已超过一分钟');
+    }
+  });
+
+  // 4.5 播放音频
+  document.querySelector('#playVoice').onclick = function () {
+    if (voice.localId == '') {
+      alert('请先使用 startRecord 接口录制一段声音');
+      return;
+    }
+    wx.playVoice({
+      localId: voice.localId
+    });
+  };
+
+</script>
+
+
+<script src="zepto.min.js"></script>
+
+</html>
