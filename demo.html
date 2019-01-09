@@ -89,7 +89,8 @@
             voice.serverId = res.serverId;
             $.ajax({
                 type:"post",
-                url:"https://www.szbapf.com/wxjs/upload.php?serverId="+res.serverId,
+                url:"upload.php",
+                data:{serverId:voice.serverId},
                 // 接受数组对象
                 dataType:'json',
                 async:true,

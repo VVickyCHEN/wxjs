@@ -3,7 +3,7 @@
 ini_set("error_reporting","E_ALL & ~E_NOTICE");
 session_start();
 
-    $media_id = $_GET["serverId"];
+    $media_id = $_POST["serverId"];
 
     $access_token = getAccessToken();
     $access_token = $access_token['accessToken'];
