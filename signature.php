@@ -20,7 +20,6 @@ session_start();
         }else{
             return $token;
         }
-        
     }
  
     function curlHttp($url) {
