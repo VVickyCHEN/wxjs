@@ -43,7 +43,7 @@ function getAccessToken()
 {
     $token = $_SESSION['token'];
     if(!isset($token)){
-        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".'wx5ead899dc1f6ea25'."&secret=".'b7587083785486e4d2484b93bc0a0aef';
+        $url = "https://api.weixin.qq.com/cgi-bin/token?grant_type=client_credential&appid=".'wxe5311527a8d23942'."&secret=".'78163b6864f52e1c4a2604c3e89d7017';
         // 微信返回的信息
         $returnData = json_decode(curlHttp($url));
         $resData['accessToken'] = $returnData->access_token;

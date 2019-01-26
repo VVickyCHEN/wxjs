@@ -9,56 +9,56 @@
 </head>
 <body ontouchstart="">
 <div class="wxapi_container">
-   
-    <div class="lbox_close wxapi_form">
-      <h3 id="menu-basic">基础接口</h3>
 
-      <h3 id="menu-voice">音频接口</h3>
-      <span class="desc">开始录音接口</span>
-      <button class="btn btn_primary" id="startRecord">startRecord</button>
-      <span class="desc">停止录音接口</span>
-      <button class="btn btn_primary" id="stopRecord">stopRecord</button>
-      <span class="desc">播放语音接口</span>
-      <button class="btn btn_primary" id="playVoice">playVoice</button>
+  <div class="lbox_close wxapi_form">
+    <h3 id="menu-basic">基础接口</h3>
 
-    </div>
+    <h3 id="menu-voice">音频接口</h3>
+    <span class="desc">开始录音接口</span>
+    <button class="btn btn_primary" id="startRecord">startRecord</button>
+    <span class="desc">停止录音接口</span>
+    <button class="btn btn_primary" id="stopRecord">stopRecord</button>
+    <span class="desc">播放语音接口</span>
+    <button class="btn btn_primary" id="playVoice">playVoice</button>
+
   </div>
+</div>
 </body>
 <script type="text/javascript" src="https://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
 <script type="text/javascript" src="jquery-3.2.1.js"></script>
 <script>
-$(function(){
+  $(function(){
     var url = encodeURIComponent(location.href.split('#')[0]);
     $.ajax({
-        type:"post",
-        data:{url:url},
+      type:"post",
+      data:{url:url},
 
-        url:"signature.php",
-        // data:{appid:'wx5ead899dc1f6ea25'},
-        async:false,
-        dataType:'json',
-        success:function(data){
-          wx.config({
-            debug: false,
-            appId: data.appId,
-            timestamp: data.timestamp,
-            nonceStr: data.nonceStr,
-            signature: data.signature,
-            jsApiList: [
-              'startRecord',
-              'stopRecord',
-              'playVoice',
-              'pauseVoice',
-              'stopVoice',
-              'uploadVoice',
-            ]
-          });
-        }
+      url:"signature.php",
+      // data:{appid:'wx5ead899dc1f6ea25'},
+      async:false,
+      dataType:'json',
+      success:function(data){
+        wx.config({
+          debug: true,
+          appId: data.appId,
+          timestamp: data.timestamp,
+          nonceStr: data.nonceStr,
+          signature: data.signature,
+          jsApiList: [
+            'startRecord',
+            'stopRecord',
+            'playVoice',
+            'pauseVoice',
+            'stopVoice',
+            'uploadVoice',
+          ]
+        });
+      }
     });
     // ajax结束
-});
+  });
 
-	// function结束
+  // function结束
 
   // 3 智能接口
   var voice = {
@@ -85,18 +85,18 @@ $(function(){
         wx.uploadVoice({
           localId: voice.localId,
           success: function (res) {
-            
+
             voice.serverId = res.serverId;
             $.ajax({
-                type:"post",
-                url:"upload.php",
-                data:{serverId:voice.serverId},
-                // 接受数组对象
-                dataType:'json',
-                async:true,
-                success:function(msg){
-                    alert(JSON.stringify(msg));
-                }
+              type:"post",
+              url:"upload.php",
+              data:{serverId:voice.serverId},
+              // 接受数组对象
+              dataType:'json',
+              async:true,
+              success:function(msg){
+                alert(JSON.stringify(msg));
+              }
             })
           }
         });
